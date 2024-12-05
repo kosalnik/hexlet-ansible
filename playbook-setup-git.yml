@@ -27,3 +27,11 @@
        dest: /home/{{ item }}/.gitconfig
       loop: "{{ users }}"
       become: yes
+
+    - name: setup ssh authorized keys
+      ansible.posix.authorized_key:
+        user: "{{ item }}"
+        state: present
+        key: "{{ lookup('file', 'files/id_rsa.pub') }}"
+      loop: "{{ users }}"
+      become: yes
