@@ -1,10 +1,29 @@
 - hosts: app
   gather_facts: no
+  vars:
+    users:
+      - jaime
+      - ansa
+      - robert
   tasks:
     - name: install git
       ansible.builtin.apt:
         name: git
         state: present
         update_cache: yes
-      become: yes # <---
+      become: yes
 
+    - name: add users
+      ansible.builtin.user:
+        name: "{{ item }}"
+        state: present
+      become: yes
+      loop: "{{ users }}"
+      tags: [add_user]
+
+    - name: setup git config
+      ansible.builtin.template:
+       src: files/.gitconfig.j2
+       dest: /home/{{ item }}/.gitconfig
+      loop: "{{ users }}"
+      become: yes
