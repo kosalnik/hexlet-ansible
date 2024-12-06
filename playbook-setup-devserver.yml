@@ -1,0 +1,17 @@
+- hosts: app
+  roles:
+  - role: geerlingguy.postgresql
+    become: yes
+    vars:
+      postgresql_user: postgres
+      postgresql_group: postgres
+      postgresql_locales:
+        - 'ru_RU.UTF-8'
+      postgresql_users:
+        - name: harry
+          password: 123
+  - role: geerlingguy.git
+  - role: geerlingguy.nodejs
+    become: yes
+    vars:
+      nodejs_version: "16.x"
