@@ -1,0 +1,12 @@
+- name: add users
+  ansible.builtin.user:
+    name: "{{ userenv_user_name }}"
+    password: "{{ userenv_user_password }}"
+    state: present
+  register: result
+
+- name: init gitconfig
+  ansible.builtin.template:
+     src: templates/.gitconfig.j2
+     dest: /home/{{ userenv_user_name }}/.gitconfig
+  when: result is changed

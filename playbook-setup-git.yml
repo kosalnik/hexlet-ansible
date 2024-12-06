@@ -2,9 +2,9 @@
   gather_facts: no
   vars:
     users:
-      - jaime
-      - ansa
-      - robert
+      - one
+      - two
+      - three
   tasks:
     - name: install git
       ansible.builtin.apt:
@@ -14,19 +14,14 @@
       become: yes
 
     - name: add users
-      ansible.builtin.user:
-        name: "{{ item }}"
-        state: present
-      become: yes
+      ansible.builtin.include_role:
+        name: userenv
+      vars:
+        userenv_user_name: "{{ item }}"
+        userenv_user_password: "123"
+        userenv_user_email: "{{ item }}@example.com"
       loop: "{{ users }}"
       tags: [add_user]
-
-    - name: setup git config
-      ansible.builtin.template:
-       src: files/.gitconfig.j2
-       dest: /home/{{ item }}/.gitconfig
-      loop: "{{ users }}"
-      become: yes
 
     - name: setup ssh authorized keys
       ansible.posix.authorized_key:
