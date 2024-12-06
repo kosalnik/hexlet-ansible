@@ -4,11 +4,18 @@
     nginx_port: 80
     magic_name: "This is server {{ ansible_hostname }}!"
   tasks:
-    - name: install nginx
+    - name: install
       ansible.builtin.apt:
-        name: nginx
+        name:
+          - nginx
+          - cowsay
         state: latest
+        update_cache: yes
       become: yes
+
+    - name: cowsay
+      ansible.builtin.command: "cowsay '{{ magic_name }}'"
+      register: result
 
     - name: update nginx config
       ansible.builtin.template:
